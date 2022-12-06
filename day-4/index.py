@@ -12,6 +12,7 @@ def do_assigments_overlap(line, version):
         return len(total_sections_covered) == max(len(a), len(b)) # if true then one assignment completely overlaps the other
     else:
         return len(total_sections_covered) < len(a) + len(b) # if true then one assignment at least partially overlaps the other
+
 # Part 1
 with open("day-4/input.txt", "r") as f:
     results = [do_assigments_overlap(line, 1) for line in f]
