@@ -1,5 +1,7 @@
 from pprint import pprint
 
+ROPE_LENGTH = 2 # Set to 10 for part 2
+
 def move_head(move: list, x_coord: int, y_coord: int):
     direction = -1 if move[0] in ["L", "D"] else 1
     move_count = (int(move[1]) + 1) * direction
@@ -35,28 +37,33 @@ def move_tail(new_coords : list[tuple], x: int, y: int):
     
     return x_coords[1:], y_coords[1:]
 
-def main():
-    head_x = 0
-    head_y = 0
 
-    x_coords = [0]
-    y_coords = [0]
+def main():
+    x_heads = dict(zip(range(0,ROPE_LENGTH), [0] * ROPE_LENGTH))
+    y_heads = dict(zip(range(0,ROPE_LENGTH), [0] * ROPE_LENGTH))
+
+    coords = [(0,0)]
 
     with open("day-9/input.txt", "r") as f:
         for line in f:
             move = line.strip("\n").split(" ")
+            new_coords = move_head(move, x_heads[0], y_heads[0])
+            x_heads[0], y_heads[0] = new_coords[-1]
+            # move head
 
-            new_coords = move_head(move, head_x, head_y)
-            head_x, head_y = new_coords[-1]
+            for i in range(1,ROPE_LENGTH):
+                new_x, new_y = move_tail(new_coords, x_heads[i], y_heads[i])
+                new_coords = list(zip(new_x, new_y))
+                if len(new_x): x_heads[i] = new_x[-1]
+                if len(new_y): y_heads[i] = new_y[-1]
+            # loop through each knot's movements
+            # update new_coords each time as each knot will follow the one before
 
-            new_x, new_y = move_tail(new_coords, x_coords[-1], y_coords[-1])
-            x_coords += new_x
-            y_coords += new_y
-
-            if len(x_coords) != len(y_coords): assert "AAA"
+            coords += new_coords
+            # add the last x,y coords to the list
     
-    coords = set(zip(x_coords, y_coords))
+    unique_coords = set(coords)
     # pprint(coords)
-    pprint(len(coords))
+    pprint(len(unique_coords))
 
 main()
