@@ -10,7 +10,7 @@ def get_x_changes(filename):
     return x_changes
 
 def part_1(x_values):
-    signal_strengths = [point * x_values[point] for point in range(20,221,40)]
+    signal_strengths = [point * x_values[point-1] for point in range(20,221,40)]
     print(sum(signal_strengths))
 
 def part_2(x_values):
@@ -24,7 +24,7 @@ def part_2(x_values):
 
 def main():
     x_changes = get_x_changes("day-10/input.txt")
-    x_values = [sum(x_changes[:point]) for point in range(len(x_changes))]
+    x_values = [sum(x_changes[:point]) for point in range(1,len(x_changes))]
 
     part_1(x_values)
     part_2(x_values)
