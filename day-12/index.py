@@ -26,7 +26,7 @@ class Node:
     def __assign_start_and_end_nodes__(self, char):
         global start_nodes
         global end_node
-        if char == "S": #or char == "a":
+        if char == "S": # or char == "a":
             # uncomment for part 2
             try:
                 start_nodes.append(self)
@@ -38,7 +38,7 @@ class Node:
     def __add_node__(self, node):
         self.nodes.append(node)
 
-    def add_vertices(self ,b):
+    def try_add_vertices(self ,b):
         if self.elevation + 1 >= b.elevation:
             self.__add_node__(b)
         if b.elevation + 1 >= self.elevation:
@@ -49,12 +49,12 @@ def generate_graph_from_line(node_row: list[Node], next_line: list[str]):
     next_row = []
     index = 0
     for node in node_row:
-        if index + 1 <= len(node_row) - 1:
+        if index + 1 < len(node_row):
             adjacent = node_row[index + 1]
-            node.add_vertices(adjacent)
+            node.try_add_vertices(adjacent)
 
         below = Node(node.row + 1, node.col, next_line[node.col])
-        node.add_vertices(below)
+        node.try_add_vertices(below)
         next_row.append(below)
         
         index += 1
@@ -71,6 +71,8 @@ def generate_graph(filename : str):
             prev_row = generate_graph_from_line(prev_row, list(line.strip("\n")))
 
 def find_shortest_path_breadth_first(start_node : Node):
+    if start_node == end_node: return 0
+    
     start_node.distance = 0
     queue = [start_node]
 
@@ -102,9 +104,10 @@ def main():
         reset_all_visited()
         distance = find_shortest_path_breadth_first(start_node)
         if distance != None:
+            # returns null if cannot reach end node
             distances.append(distance)
 
-    # print("Distances: ", distances)
-    print("Shortest distance: ", min([d for d in distances if d != None]))
+    print("Distances: ", distances)
+    print("Shortest distance: ", min(distances))
 
 main()
